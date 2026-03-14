@@ -1,7 +1,14 @@
+import path from "node:path";
 import { defineConfig } from "vite";
+
+const repoRoot = path.resolve(__dirname, "..", "..");
 
 export default defineConfig({
   server: {
-    port: 5173
+    host: true,
+    port: 5173,
+    fs: {
+      allow: [repoRoot]
+    }
   }
 });

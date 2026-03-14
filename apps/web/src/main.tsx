@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import "./index.css";
+import indexJson from "../../../public/index.json";
 
 type IndexItem = {
   date: string;
@@ -17,21 +18,25 @@ type IndexFile = {
   items: IndexItem[];
 };
 
+const markdownModules = import.meta.glob("../../../content/**/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true
+}) as Record<string, string>;
+
+const markdownByPath = Object.fromEntries(
+  Object.entries(markdownModules).map(([filePath, content]) => [filePath.replace("../../../", ""), content])
+);
 function App() {
   const [index, setIndex] = React.useState<IndexFile | null>(null);
   const [selected, setSelected] = React.useState<IndexItem | null>(null);
   const [markdown, setMarkdown] = React.useState<string>("");
 
   React.useEffect(() => {
-    fetch("/public/index.json")
-      .then((r) => r.json())
-      .then((json: IndexFile) => {
-        const items = [...(json.items ?? [])].sort((a, b) => `${b.date}${b.themeId}`.localeCompare(`${a.date}${a.themeId}`));
-        const data = { ...json, items };
-        setIndex(data);
-        setSelected(items[0] ?? null);
-      })
-      .catch(() => setIndex({ generatedAt: null, items: [] }));
+    const items = [...(indexJson.items ?? [])].sort((a, b) => `${b.date}${b.themeId}`.localeCompare(`${a.date}${a.themeId}`));
+    const data = { ...indexJson, items } as IndexFile;
+    setIndex(data);
+    setSelected(items[0] ?? null);
   }, []);
 
   React.useEffect(() => {
@@ -39,10 +44,7 @@ function App() {
       setMarkdown("");
       return;
     }
-    fetch(`/${selected.path}`)
-      .then((r) => r.text())
-      .then((t) => setMarkdown(t))
-      .catch(() => setMarkdown("本文の読み込みに失敗しました。"));
+    setMarkdown(markdownByPath[selected.path] ?? "本文の読み込みに失敗しました。");
   }, [selected]);
 
   return (

@@ -16,11 +16,10 @@ function getTodayJstDateString(date = new Date()) {
 }
 
 function resolveBriefDate() {
-  const override = process.env.BRIEF_DATE;
+  const override = process.env.BRIEF_DATE?.trim();
   if (!override) return getTodayJstDateString();
-
   if (!/^\d{4}-\d{2}-\d{2}$/.test(override)) {
-    throw new Error(`Invalid BRIEF_DATE format: ${override}. Use YYYY-MM-DD.`);
+    throw new Error(`Invalid BRIEF_DATE: ${override}. Expected YYYY-MM-DD.`);
   }
   return override;
 }
@@ -158,6 +157,10 @@ async function main() {
     }
 
     const finalItems = [...dedupedMap.values()].slice(0, 10);
+    if (finalItems.length === 0) {
+      console.warn(`[WARN] ${theme.id}: skipping brief generation for ${date} because no items were collected`);
+      continue;
+    }
     const markdown = renderMarkdown(date, theme, finalItems);
     const articlePath = await writeBrief(date, theme, markdown);
 
@@ -176,6 +179,10 @@ async function main() {
     (item, idx, arr) => arr.findIndex((x) => x.date === item.date && x.themeId === item.themeId) === idx
   );
 
+  if (newRecords.length === 0) {
+    console.log("[OK] no new briefs generated; keeping existing index.json as-is");
+    return;
+  }
   await mkdir(path.dirname(INDEX_PATH), { recursive: true });
   await writeFile(
     INDEX_PATH,

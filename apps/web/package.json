@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite-plus dev",
-    "build": "vite-plus build",
-    "preview": "vite-plus preview"
+    "dev": "vp dev -- --host",
+    "build": "vp build",
+    "preview": "vp preview"
   },
   "dependencies": {
     "react": "^19.0.0",

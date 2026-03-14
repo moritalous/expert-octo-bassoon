@@ -1,0 +1,25 @@
+{
+  "name": "@morning-brief/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite-plus dev",
+    "build": "vite-plus build",
+    "preview": "vite-plus preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5"
+  },
+  "devDependencies": {
+    "vite-plus": "latest",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20",
+    "typescript": "^5.7.3",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2"
+  }
+}

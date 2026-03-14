@@ -161,7 +161,6 @@ async function main() {
       console.warn(`[WARN] ${theme.id}: skipping brief generation for ${date} because no items were collected`);
       continue;
     }
-
     const markdown = renderMarkdown(date, theme, finalItems);
     const articlePath = await writeBrief(date, theme, markdown);
 
@@ -184,7 +183,6 @@ async function main() {
     console.log("[OK] no new briefs generated; keeping existing index.json as-is");
     return;
   }
-
   await mkdir(path.dirname(INDEX_PATH), { recursive: true });
   await writeFile(
     INDEX_PATH,

@@ -27,7 +27,6 @@ const markdownModules = import.meta.glob("../../../content/**/*.md", {
 const markdownByPath = Object.fromEntries(
   Object.entries(markdownModules).map(([filePath, content]) => [filePath.replace("../../../", ""), content])
 );
-
 function App() {
   const [index, setIndex] = React.useState<IndexFile | null>(null);
   const [selected, setSelected] = React.useState<IndexItem | null>(null);

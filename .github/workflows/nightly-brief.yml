@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       brief_date:
-        description: 'Generate brief for date (YYYY-MM-DD). Leave empty for current JST date.'
+        description: "Override brief date (YYYY-MM-DD). Optional for manual reruns."
         required: false
         type: string
 

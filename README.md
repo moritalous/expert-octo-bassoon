@@ -33,3 +33,8 @@
 - Branch公開モードの場合、指定できる公開ディレクトリは通常 `/(root)` か `/docs` です。
 - 一方で **GitHub Actionsデプロイ**では、workflow内で作る出力ディレクトリ（このリポジトリでは `PAGES_ARTIFACT_DIR`）を任意にできます。
 - これにより、リポジトリ全体のソースをそのままPages配信する構成を避けられます。
+
+
+## 手動実行時の日付上書き
+- `workflow_dispatch` 実行時に `brief_date`（YYYY-MM-DD）を指定できます。
+- ローカルでは `BRIEF_DATE=2026-03-15 npm run batch` のように指定可能です。

@@ -15,6 +15,7 @@
 1. `npm install`
 2. `npm run batch`
 3. 生成された記事は `content/YYYY-MM-DD/gen-ai.md`、一覧は `public/index.json` を確認
+   手動で日付を指定する場合は `BRIEF_DATE=2026-03-15 npm run batch` のように実行
 
 4. `python -m http.server 8000` で起動し、`http://localhost:8000/index.html` でUI確認
 

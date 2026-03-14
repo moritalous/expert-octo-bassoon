@@ -5,6 +5,11 @@ on:
     # 05:00 JST = 20:00 UTC (previous day)
     - cron: '0 20 * * *'
   workflow_dispatch:
+    inputs:
+      brief_date:
+        description: 'Generate brief for date (YYYY-MM-DD). Leave empty for current JST date.'
+        required: false
+        type: string
 
 jobs:
   generate-brief:
@@ -21,6 +26,8 @@ jobs:
           node-version: '20'
 
       - name: Generate morning brief
+        env:
+          BRIEF_DATE: ${{ inputs.brief_date }}
         run: npm run batch
 
       - name: Prepare docs for Pages

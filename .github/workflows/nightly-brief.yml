@@ -1,0 +1,39 @@
+name: Nightly Morning Brief
+
+on:
+  schedule:
+    # 05:00 JST = 20:00 UTC (previous day)
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-brief:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate morning brief
+        run: npm run batch
+
+      - name: Prepare docs for Pages
+        run: npm run prepare:pages
+
+      - name: Commit generated files
+        run: |
+          if [[ -n "$(git status --porcelain content public/index.json docs/index.html docs/assets docs/content docs/public/index.json)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add content public/index.json docs/index.html docs/assets docs/content docs/public/index.json
+            git commit -m "chore: update morning brief content"
+            git push
+          else
+            echo "No content updates"
+          fi

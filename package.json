@@ -1,0 +1,13 @@
+{
+  "name": "expert-octo-bassoon",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "batch": "node apps/batch/src/run.mjs",
+    "dev:web": "npm --workspace @morning-brief/web run dev",
+    "build:web": "npm --workspace @morning-brief/web run build",
+    "prepare:pages": "node scripts/prepare-pages.mjs"
+  }
+}

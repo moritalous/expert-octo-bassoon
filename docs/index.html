@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Morning Brief</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="container">
+      <h1>Morning Brief</h1>
+      <p class="muted">毎朝のキュレーション記事を一覧で確認できます。</p>
+    </header>
+
+    <main class="container layout">
+      <section>
+        <h2>最新記事</h2>
+        <article id="latest" class="card">
+          <p class="muted">読み込み中...</p>
+        </article>
+      </section>
+
+      <section>
+        <h2>過去記事</h2>
+        <div id="list" class="stack"></div>
+      </section>
+
+      <section>
+        <h2>記事本文</h2>
+        <article id="content" class="card markdown">
+          <p class="muted">左の「本文を表示」から記事を選択してください。</p>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="assets/app.js"></script>
+  </body>
+</html>

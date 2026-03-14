@@ -1,0 +1,13 @@
+[
+  {
+    "id": "gen-ai",
+    "name": "生成AI",
+    "google_alert_rss": [
+      "https://www.google.com/alerts/feeds/09189487958967512194/3427033226118211136"
+    ],
+    "extra_rss": [
+      "https://aws.amazon.com/jp/blogs/news/feed/"
+    ],
+    "is_active": true
+  }
+]

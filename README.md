@@ -11,6 +11,11 @@
 - 配信候補: GitHub Pages（優先） / AWSサーバーレス（拡張）
 - 対象外（後続）: URL単体DeepResearch記事化
 
+## Source Policy
+- 主ソースは `config/themes.json` の `google_alert_rss`。本番朝刊ではここを常時収集対象にする。
+- 補助ソースは `supplemental_rss` のみ。テーマごとに明示的に追加したものだけを本番収集対象に含める。
+- `extra_rss` のような試験用フィードは本番朝刊の収集対象にしない。
+
 ## Local Run
 1. `mise install`
 2. `npm install`

@@ -113,11 +113,15 @@
     "google_alert_rss": [
       "https://www.google.com/alerts/feeds/09189487958967512194/3427033226118211136"
     ],
-    "extra_rss": [],
+    "supplemental_rss": [],
     "is_active": true
   }
 ]
 ```
+
+- `google_alert_rss`: 本番朝刊の主ソース。Google Alerts を常時収集する。
+- `supplemental_rss`: 本番に含める補助ソース。採用するものだけ明示追加する。
+- 試験用フィードは設定に残しても本番収集対象へ混ぜない。
 
 ### `content/YYYY-MM-DD/<theme>.md`
 - 生成済み朝刊記事（本文）
@@ -131,6 +135,7 @@
 ## バッチ処理フロー（日次）
 1. 有効テーマを取得
 2. テーマごとにGoogleアラートRSSを収集
+   補助ソースを使う場合も、明示追加された `supplemental_rss` のみを収集対象にする
 3. URL正規化と類似判定で重複除去
 4. 記事ごとに要点抽出（出典保持）
 5. 朝刊テンプレートへ整形

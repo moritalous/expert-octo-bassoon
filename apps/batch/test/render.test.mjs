@@ -20,3 +20,10 @@ test("markdownToHtml strips inline html noise from summaries", () => {
   assert.match(html, /Claude Code/);
   assert.match(html, /・/);
 });
+
+test("markdownToHtml keeps parentheses inside markdown link URLs", () => {
+  const html = markdownToHtml("- 出典: [記事を開く](https://example.com/wiki/Foo_(bar))");
+
+  assert.match(html, /href="https:\/\/example\.com\/wiki\/Foo_\(bar\)"/);
+  assert.doesNotMatch(html, /bar\)<\/a>\)/);
+});

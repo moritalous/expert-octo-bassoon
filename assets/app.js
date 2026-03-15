@@ -239,13 +239,30 @@ async function main() {
     }
 
     articleState = await Promise.all(items.map(async (item) => {
-      const res = await fetch(item.path);
-      const text = await res.text();
+      try {
+        const res = await fetch(item.path);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
 
-      return {
-        ...item,
-        meta: extractArticleMeta(text, item)
-      };
+        const text = await res.text();
+
+        return {
+          ...item,
+          meta: extractArticleMeta(text, item)
+        };
+      } catch (_error) {
+        return {
+          ...item,
+          meta: {
+            title: item.title,
+            lead: "要約を取得できませんでした。本文から内容を確認してください。",
+            count: 0,
+            highlights: ["この号の要点は本文の読み込み時に確認してください。"],
+            topics: []
+          }
+        };
+      }
     }));
 
     const latest = articleState[0];

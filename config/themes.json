@@ -5,7 +5,50 @@
     "google_alert_rss": [
       "https://www.google.com/alerts/feeds/09189487958967512194/3427033226118211136"
     ],
-    "supplemental_rss": [],
+    "supplemental_rss": [
+      "https://aws.amazon.com/jp/blogs/news/feed/"
+    ],
+    "relevance": {
+      "threshold": 7,
+      "keywords": [
+        "生成AI",
+        "gen ai",
+        "generative ai",
+        "foundation model",
+        "llm",
+        "large language model",
+        "ai agent",
+        "agentic",
+        "chatgpt",
+        "claude",
+        "gemini",
+        "openai",
+        "anthropic",
+        "prompt",
+        "rag",
+        "fine-tuning",
+        "fine tuning",
+        "inference",
+        "bedrock",
+        "gpt"
+      ],
+      "exclude_keywords": [
+        "rds",
+        "redshift",
+        "kinesis",
+        "aurora",
+        "dynamodb",
+        "cloudfront",
+        "vpc",
+        "network firewall",
+        "waf",
+        "eks",
+        "ecs",
+        "s3",
+        "backup",
+        "storage gateway"
+      ]
+    },
     "is_active": true
   }
 ]

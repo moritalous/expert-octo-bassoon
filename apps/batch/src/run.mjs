@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseFeedItems, summarizeItem } from "./feed-parser.mjs";
 import { getProductionFeedUrls } from "./theme-sources.mjs";
+import { rankArticles } from "./relevance.mjs";
 
 const ROOT = path.resolve(process.cwd());
 const THEMES_PATH = path.join(ROOT, "config", "themes.json");
@@ -76,7 +77,8 @@ function renderMarkdown(date, theme, items) {
   const lead = `本日の${theme.name}関連ニュースを ${items.length} 件キュレーションしました。`;
   const sections = items
     .map(
-      (item, i) => `### ${i + 1}. ${item.title}\n- 重要度: ${item.importance}\n- 公開日時: ${item.publishedAt ?? "不明"}\n- 要約: ${item.summary}\n- 出典: ${item.url}`
+      (item, i) =>
+        `### ${i + 1}. ${item.title}\n- 重要度: ${item.importance}\n- 公開日時: ${item.publishedAt ?? "不明"}\n- 要約: ${item.summary}\n- 適合度: ${item.relevance.score}\n- ソース種別: ${item.sourceType === "supplemental" ? "補助ソース" : "主ソース"}\n- 出典: ${item.url}`
     )
     .join("\n\n");
 
@@ -104,7 +106,8 @@ async function main() {
     for (const feedUrl of allFeedUrls) {
       try {
         const items = await fetchRssItems(feedUrl);
-        allItems.push(...items);
+        const sourceType = theme.google_alert_rss.includes(feedUrl) ? "primary" : "supplemental";
+        allItems.push(...items.map((item) => ({ ...item, sourceType, feedUrl })));
       } catch (error) {
         console.error(`[WARN] ${theme.id}: failed to fetch ${feedUrl}`, error.message);
       }
@@ -119,11 +122,13 @@ async function main() {
         url: normalized,
         publishedAt: item.pubDate,
         summary: summarize(item),
-        importance: estimateImportance(item.title)
+        importance: estimateImportance(item.title),
+        sourceType: item.sourceType,
+        feedUrl: item.feedUrl
       });
     }
 
-    const finalItems = [...dedupedMap.values()].slice(0, 10);
+    const finalItems = rankArticles(theme, [...dedupedMap.values()]).slice(0, 10);
     if (finalItems.length === 0) {
       console.warn(`[WARN] ${theme.id}: skipping brief generation for ${date} because no items were collected`);
       continue;

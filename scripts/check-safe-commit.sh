@@ -20,11 +20,12 @@ case "$scan_mode" in
     mapfile -t scan_files < <(git diff --cached --name-only --diff-filter=ACMR)
     label="staged"
     git_show_prefix=":"
+    read_mode="git"
     ;;
   tracked)
     mapfile -t scan_files < <(git ls-files)
     label="tracked"
-    git_show_prefix="HEAD:"
+    read_mode="worktree"
     ;;
   *)
     echo "Usage: bash scripts/check-safe-commit.sh [staged|tracked]" >&2
@@ -45,7 +46,11 @@ trap cleanup EXIT
 
 for file_path in "${scan_files[@]}"; do
   mkdir -p "$tmp_root/$(dirname "$file_path")"
-  git show "${git_show_prefix}${file_path}" > "$tmp_root/$file_path"
+  if [[ "$read_mode" == "git" ]]; then
+    git show "${git_show_prefix}${file_path}" > "$tmp_root/$file_path"
+  else
+    cat "$repo_root/$file_path" > "$tmp_root/$file_path"
+  fi
 done
 
 gitleaks dir --no-banner --redact "$tmp_root"
@@ -55,7 +60,13 @@ path_pattern="(${home_dir_escaped}|${home_dir_escaped}/Desktop|/mnt/c/Users/|C:\
 findings=()
 
 for file_path in "${scan_files[@]}"; do
-  if match="$(git show "${git_show_prefix}${file_path}" | grep -a -n -m 1 -E "$path_pattern" || true)"; then
+  if [[ "$read_mode" == "git" ]]; then
+    file_content_command=(git show "${git_show_prefix}${file_path}")
+  else
+    file_content_command=(cat "$repo_root/$file_path")
+  fi
+
+  if match="$("${file_content_command[@]}" | grep -a -n -m 1 -E "$path_pattern" || true)"; then
     if [[ -n "$match" ]]; then
       if [[ "$file_path" == "scripts/check-safe-commit.sh" ]] && [[ "$match" == *"path_pattern="* ]]; then
         continue

@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseFeedItems, summarizeItem } from "./feed-parser.mjs";
+import { getProductionFeedUrls } from "./theme-sources.mjs";
 
 const ROOT = path.resolve(process.cwd());
 const THEMES_PATH = path.join(ROOT, "config", "themes.json");
@@ -97,7 +98,7 @@ async function main() {
   const newRecords = [];
 
   for (const theme of themes) {
-    const allFeedUrls = [...theme.google_alert_rss, ...(theme.extra_rss ?? [])];
+    const allFeedUrls = getProductionFeedUrls(theme);
     const allItems = [];
 
     for (const feedUrl of allFeedUrls) {

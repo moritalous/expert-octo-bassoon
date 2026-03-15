@@ -5,9 +5,7 @@
     "google_alert_rss": [
       "https://www.google.com/alerts/feeds/09189487958967512194/3427033226118211136"
     ],
-    "extra_rss": [
-      "https://aws.amazon.com/jp/blogs/news/feed/"
-    ],
+    "supplemental_rss": [],
     "is_active": true
   }
 ]

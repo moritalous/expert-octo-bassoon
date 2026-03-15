@@ -28,6 +28,7 @@
 
 ### Step 2: RSS収集を実装する
 - `config/themes.json` の `google_alert_rss` を読み込み
+- 補助ソースを使う場合も `supplemental_rss` に明示登録したものだけを読む
 - RSSを取得して以下を抽出
   - title
   - link
@@ -90,3 +91,4 @@
 - Phase 1は **GitHub Pages固定** で進める。
 - 生成時間は **毎日 05:00 JST**（GitHub Actions上では前日20:00 UTC）に設定する。
 - 初期テーマは **生成AIのみ** とし、RSSは `config/themes.json` の1件を使う。
+- ソース優先順位は `google_alert_rss` を主、`supplemental_rss` を明示 opt-in の補助とする。

@@ -6,6 +6,9 @@
   ],
   "scripts": {
     "batch": "node apps/batch/src/run.mjs",
+    "setup:tools": "mise install",
+    "check:safety": "bash scripts/check-safe-commit.sh",
+    "prepr": "npm run check:safety && npm run test:batch",
     "test:batch": "node --test apps/batch/test/*.test.mjs",
     "dev:web": "npm --workspace @morning-brief/web run dev",
     "build:web": "npm --workspace @morning-brief/web run build",

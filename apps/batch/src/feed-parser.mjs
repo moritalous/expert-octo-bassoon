@@ -40,7 +40,7 @@ function parseRssItems(xml) {
 
 function parseAtomEntries(xml) {
   const items = [];
-  const matches = xml.match(/<entry>([\s\S]*?)<\/entry>/gi) ?? [];
+  const matches = xml.match(/<entry(?:\s[^>]*)?>([\s\S]*?)<\/entry>/gi) ?? [];
   for (const rawEntry of matches) {
     const title = tagValue(rawEntry, "title") || "(no title)";
     const link =

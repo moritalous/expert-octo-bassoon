@@ -49,6 +49,27 @@ test("parseFeedItems parses Atom entries such as Google Alerts feeds", () => {
   ]);
 });
 
+test("parseFeedItems parses Atom entries with entry attributes", () => {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <entry xml:lang="ja">
+      <title type="html">Attributed Atom headline</title>
+      <link href="https://example.com/atom-attributed" />
+      <updated>2026-03-15T01:00:00Z</updated>
+      <summary type="html">Summary with &lt;b&gt;markup&lt;/b&gt;.</summary>
+    </entry>
+  </feed>`;
+
+  assert.deepEqual(parseFeedItems(xml), [
+    {
+      title: "Attributed Atom headline",
+      link: "https://example.com/atom-attributed",
+      pubDate: "2026-03-15T01:00:00Z",
+      description: "Summary with <b>markup</b>."
+    }
+  ]);
+});
+
 test("summarizeItem strips markup from Atom content", () => {
   const summary = summarizeItem({
     title: "Atom headline",

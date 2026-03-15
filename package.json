@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "batch": "node apps/batch/src/run.mjs",
+    "test:batch": "node --test apps/batch/test/*.test.mjs",
     "dev:web": "npm --workspace @morning-brief/web run dev",
     "build:web": "npm --workspace @morning-brief/web run build",
     "prepare:pages": "node scripts/prepare-pages.mjs"

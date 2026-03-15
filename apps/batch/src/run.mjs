@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { parseFeedItems, summarizeItem } from "./feed-parser.mjs";
 
 const ROOT = path.resolve(process.cwd());
 const THEMES_PATH = path.join(ROOT, "config", "themes.json");
@@ -37,39 +38,6 @@ function normalizeUrl(raw) {
   }
 }
 
-function decodeXml(text = "") {
-  return text
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&amp;", "&")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'")
-    .trim();
-}
-
-function stripHtml(text = "") {
-  return text.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function tagValue(block, tag) {
-  const match = block.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, "i"));
-  return match ? decodeXml(match[1]) : "";
-}
-
-function parseRssItems(xml) {
-  const items = [];
-  const matches = xml.match(/<item>([\s\S]*?)<\/item>/gi) ?? [];
-  for (const rawItem of matches) {
-    const title = tagValue(rawItem, "title") || "(no title)";
-    const link = tagValue(rawItem, "link");
-    const pubDate = tagValue(rawItem, "pubDate") || null;
-    const description = tagValue(rawItem, "description") || "";
-    if (!link) continue;
-    items.push({ title, link, pubDate, description });
-  }
-  return items;
-}
-
 function estimateImportance(title) {
   const t = title.toLowerCase();
   if (/(launch|release|funding|regulation|lawsuit|security|breach)/.test(t)) return "High";
@@ -78,16 +46,14 @@ function estimateImportance(title) {
 }
 
 function summarize(item) {
-  const cleaned = stripHtml(item.description);
-  if (cleaned.length > 30) return cleaned.slice(0, 180);
-  return `${item.title} に関する更新です。詳細は出典リンクを確認してください。`;
+  return summarizeItem(item);
 }
 
 async function fetchRssItems(feedUrl) {
   const res = await fetch(feedUrl, { headers: { "user-agent": "morning-brief-bot/0.1" } });
   if (!res.ok) throw new Error(`Failed to fetch RSS: ${feedUrl} (${res.status})`);
   const xml = await res.text();
-  return parseRssItems(xml);
+  return parseFeedItems(xml);
 }
 
 async function readThemes() {

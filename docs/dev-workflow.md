@@ -20,6 +20,11 @@
 - `bash scripts/check-safe-commit.sh` は staged 変更を対象に実行する。
 - `mise run prepr` は追跡ファイル全体の安全性チェックと関連テストをまとめて実行する。
 
+## Issue と PR の扱い
+- Issue 対応は、原則として作業ブランチ作成 -> 実装 -> `mise run prepr` -> PR 作成の順で進める。
+- Issue を閉じるのは、対応 PR に `Closes #<番号>` を含めてマージする場合か、手動クローズの明示指示がある場合だけにする。
+- 実装確認だけ完了した段階では、Issue を閉じずに PR 上でレビュー可能な状態へ進める。
+
 ## worktree 運用
 - worktree で作業を始めたら、まず `codex/` 接頭辞の作業ブランチを作る。
 - 別 worktree で `main` を使用中の場合、この worktree で `main` への checkout が失敗することがある。

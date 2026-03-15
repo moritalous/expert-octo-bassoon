@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { parseFeedItems, summarizeItem } from "../src/feed-parser.mjs";
+import { cleanTextFragment, parseFeedItems, summarizeItem } from "../src/feed-parser.mjs";
 
 test("parseFeedItems parses RSS items", () => {
   const xml = `<?xml version="1.0"?>
@@ -77,4 +77,8 @@ test("summarizeItem strips markup from Atom content", () => {
   });
 
   assert.equal(summary, "With Claude Code coverage in the article and enough detail to avoid fallback.");
+});
+
+test("cleanTextFragment decodes common entities used in feeds", () => {
+  assert.equal(cleanTextFragment("Claude&nbsp;Code &middot; <b>Update</b>"), "Claude Code ・ Update");
 });

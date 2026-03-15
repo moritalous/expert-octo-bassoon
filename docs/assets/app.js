@@ -1,38 +1,11 @@
+import { markdownToHtml } from "./render.mjs";
+
 const latestEl = document.getElementById("latest");
 const listEl = document.getElementById("list");
 const contentEl = document.getElementById("content");
 
 function esc(str = "") {
   return str.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-}
-
-function markdownToHtml(md = "") {
-  const lines = md.split(/\r?\n/);
-  const html = [];
-  let inList = false;
-
-  for (const line of lines) {
-    if (line.startsWith("### ")) {
-      if (inList) { html.push("</ul>"); inList = false; }
-      html.push(`<h3>${esc(line.slice(4))}</h3>`);
-    } else if (line.startsWith("## ")) {
-      if (inList) { html.push("</ul>"); inList = false; }
-      html.push(`<h2>${esc(line.slice(3))}</h2>`);
-    } else if (line.startsWith("# ")) {
-      if (inList) { html.push("</ul>"); inList = false; }
-      html.push(`<h1>${esc(line.slice(2))}</h1>`);
-    } else if (line.startsWith("- ")) {
-      if (!inList) { html.push("<ul>"); inList = true; }
-      html.push(`<li>${esc(line.slice(2))}</li>`);
-    } else if (line.trim() === "") {
-      if (inList) { html.push("</ul>"); inList = false; }
-    } else {
-      if (inList) { html.push("</ul>"); inList = false; }
-      html.push(`<p>${esc(line)}</p>`);
-    }
-  }
-  if (inList) html.push("</ul>");
-  return html.join("\n");
 }
 
 async function loadArticle(path) {

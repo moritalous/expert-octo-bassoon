@@ -12,12 +12,19 @@
 - 対象外（後続）: URL単体DeepResearch記事化
 
 ## Local Run
-1. `npm install`
-2. `npm run batch`
+1. `mise install`
+2. `npm install`
+3. `npm run batch`
 3. 生成された記事は `content/YYYY-MM-DD/gen-ai.md`、一覧は `public/index.json` を確認
    手動で日付を指定する場合は `BRIEF_DATE=2026-03-15 npm run batch` のように実行
 
-4. `python -m http.server 8000` で起動し、`http://localhost:8000/index.html` でUI確認
+4. `uv run python -m http.server 8000` で起動し、`http://localhost:8000/index.html` でUI確認
+
+## Tooling
+- 開発ツールは `mise.toml` で管理します。まず `mise install` を実行してください。
+- PR 前の確認は `mise run prepr` を基本にします。
+- シークレット検査は `gitleaks` を使います。コミット前は `.githooks/pre-commit` から `scripts/check-safe-commit.sh` が自動実行されます。
+- `bash scripts/check-safe-commit.sh` は staged 変更を、`mise run prepr` は追跡ファイル全体を対象に安全性チェックを行います。
 
 ## フロントエンド実装
 - `apps/web` に **vite-plus + Tailwind CSS + shadcn/ui** 構成を追加しました。

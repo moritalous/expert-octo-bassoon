@@ -1,0 +1,25 @@
+[tools]
+node = "22"
+python = "3.12"
+uv = "latest"
+gh = "latest"
+gitleaks = "latest"
+
+[env]
+_.path = "./node_modules/.bin"
+
+[tasks.install]
+description = "Install project tools defined in mise.toml"
+run = "mise install"
+
+[tasks.check-safety]
+description = "Scan staged changes for secrets and local absolute paths"
+run = "bash scripts/check-safe-commit.sh"
+
+[tasks.test-batch]
+description = "Run batch parser tests"
+run = "node --test apps/batch/test/*.test.mjs"
+
+[tasks.prepr]
+description = "Run the pre-PR validation flow"
+run = "bash scripts/check-safe-commit.sh tracked && node --test apps/batch/test/*.test.mjs"

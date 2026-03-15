@@ -22,4 +22,4 @@ run = "node --test apps/batch/test/*.test.mjs"
 
 [tasks.prepr]
 description = "Run the pre-PR validation flow"
-run = "bash scripts/check-safe-commit.sh && node --test apps/batch/test/*.test.mjs"
+run = "bash scripts/check-safe-commit.sh tracked && node --test apps/batch/test/*.test.mjs"

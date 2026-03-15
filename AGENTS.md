@@ -8,7 +8,7 @@
 - Playwright で確認した生成物や調査用ファイルは、明示的に必要な場合を除いてコミットしない。
 - ローカルの絶対パス、認証情報、秘密鍵、個人用トークンは git に含めない。コミット前に `npm run check:safety` を通す。
 - 秘密情報の検査は自作正規表現だけに頼らず、OSS の定番ツールを優先する。このリポジトリでは `gitleaks` を使い、`mise` で導入する。
-- 安全性チェックの実体は `scripts/check-safe-commit.sh` とし、`mise run check-safety` または pre-commit hook から実行する。
+- 安全性チェックの実体は `scripts/check-safe-commit.sh` とし、pre-commit では staged 変更、`mise run prepr` では追跡ファイル全体を対象に実行する。
 - `.gitignore` は作業生成物を確実に除外できる状態を保ち、新しい調査用・ビルド用ディレクトリを作ったら必要に応じて更新する。
 
 ## Pull Requests

@@ -24,6 +24,7 @@
 - 開発ツールは `mise.toml` で管理します。まず `mise install` を実行してください。
 - PR 前の確認は `mise run prepr` を基本にします。
 - シークレット検査は `gitleaks` を使います。コミット前は `.githooks/pre-commit` から `scripts/check-safe-commit.sh` が自動実行されます。
+- `bash scripts/check-safe-commit.sh` は staged 変更を、`mise run prepr` は追跡ファイル全体を対象に安全性チェックを行います。
 
 ## フロントエンド実装
 - `apps/web` に **vite-plus + Tailwind CSS + shadcn/ui** 構成を追加しました。

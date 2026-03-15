@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+scan_mode="${1:-staged}"
+
 if ! command -v git >/dev/null 2>&1; then
   echo "git is required." >&2
   exit 1
@@ -12,10 +14,26 @@ if ! command -v gitleaks >/dev/null 2>&1; then
 fi
 
 repo_root="$(git rev-parse --show-toplevel)"
-mapfile -t staged_files < <(git diff --cached --name-only --diff-filter=ACMR)
 
-if [[ "${#staged_files[@]}" -eq 0 ]]; then
-  echo "Safety check passed for 0 staged file(s)."
+case "$scan_mode" in
+  staged)
+    mapfile -t scan_files < <(git diff --cached --name-only --diff-filter=ACMR)
+    label="staged"
+    git_show_prefix=":"
+    ;;
+  tracked)
+    mapfile -t scan_files < <(git ls-files)
+    label="tracked"
+    git_show_prefix="HEAD:"
+    ;;
+  *)
+    echo "Usage: bash scripts/check-safe-commit.sh [staged|tracked]" >&2
+    exit 1
+    ;;
+esac
+
+if [[ "${#scan_files[@]}" -eq 0 ]]; then
+  echo "Safety check passed for 0 ${label} file(s)."
   exit 0
 fi
 
@@ -25,9 +43,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-for file_path in "${staged_files[@]}"; do
+for file_path in "${scan_files[@]}"; do
   mkdir -p "$tmp_root/$(dirname "$file_path")"
-  git show ":$file_path" > "$tmp_root/$file_path"
+  git show "${git_show_prefix}${file_path}" > "$tmp_root/$file_path"
 done
 
 gitleaks dir --no-banner --redact "$tmp_root"
@@ -36,8 +54,8 @@ home_dir_escaped="$(printf '%s\n' "$HOME" | sed 's/[.[\*^$()+?{|]/\\&/g')"
 path_pattern="(${home_dir_escaped}|${home_dir_escaped}/Desktop|/mnt/c/Users/|C:\\\\Users\\\\|/Users/|/home/)"
 findings=()
 
-for file_path in "${staged_files[@]}"; do
-  if match="$(git show ":$file_path" | grep -a -n -m 1 -E "$path_pattern" || true)"; then
+for file_path in "${scan_files[@]}"; do
+  if match="$(git show "${git_show_prefix}${file_path}" | grep -a -n -m 1 -E "$path_pattern" || true)"; then
     if [[ -n "$match" ]]; then
       if [[ "$file_path" == "scripts/check-safe-commit.sh" ]] && [[ "$match" == *"path_pattern="* ]]; then
         continue
@@ -55,4 +73,4 @@ if [[ "${#findings[@]}" -gt 0 ]]; then
   exit 1
 fi
 
-echo "Safety check passed for ${#staged_files[@]} staged file(s)."
+echo "Safety check passed for ${#scan_files[@]} ${label} file(s)."

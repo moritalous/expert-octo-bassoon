@@ -5,6 +5,8 @@ function decodeXml(text = "") {
     .replaceAll("&amp;", "&")
     .replaceAll("&quot;", '"')
     .replaceAll("&#39;", "'")
+    .replaceAll("&nbsp;", " ")
+    .replaceAll("&middot;", "・")
     .trim();
   const cdataMatch = decoded.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/i);
   return cdataMatch ? cdataMatch[1].trim() : decoded;
@@ -12,6 +14,10 @@ function decodeXml(text = "") {
 
 function stripHtml(text = "") {
   return text.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export function cleanTextFragment(text = "") {
+  return stripHtml(decodeXml(text));
 }
 
 function tagValue(block, tag) {
@@ -61,7 +67,7 @@ export function parseFeedItems(xml) {
 }
 
 export function summarizeItem(item) {
-  const cleaned = stripHtml(item.description);
+  const cleaned = cleanTextFragment(item.description);
   if (cleaned.length > 30) return cleaned.slice(0, 180);
-  return `${item.title} に関する更新です。詳細は出典リンクを確認してください。`;
+  return `${cleanTextFragment(item.title)} に関する更新です。詳細は出典リンクを確認してください。`;
 }

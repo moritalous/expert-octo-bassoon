@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { parseFeedItems, summarizeItem } from "./feed-parser.mjs";
+import { cleanTextFragment, parseFeedItems, summarizeItem } from "./feed-parser.mjs";
 import { getProductionFeedUrls } from "./theme-sources.mjs";
 import { rankArticles } from "./relevance.mjs";
 
@@ -78,7 +78,7 @@ function renderMarkdown(date, theme, items) {
   const sections = items
     .map(
       (item, i) =>
-        `### ${i + 1}. ${item.title}\n- 重要度: ${item.importance}\n- 公開日時: ${item.publishedAt ?? "不明"}\n- 要約: ${item.summary}\n- 適合度: ${item.relevance.score}\n- ソース種別: ${item.sourceType === "supplemental" ? "補助ソース" : "主ソース"}\n- 出典: ${item.url}`
+        `### ${i + 1}. ${item.title}\n- 重要度: ${item.importance}\n- 公開日時: ${item.publishedAt ?? "不明"}\n- 要約: ${item.summary}\n- 適合度: ${item.relevance.score}\n- ソース種別: ${item.sourceType === "supplemental" ? "補助ソース" : "主ソース"}\n- 出典: [記事を開く](${item.url})`
     )
     .join("\n\n");
 
@@ -118,7 +118,7 @@ async function main() {
       const normalized = normalizeUrl(item.link);
       if (dedupedMap.has(normalized)) continue;
       dedupedMap.set(normalized, {
-        title: item.title,
+        title: cleanTextFragment(item.title),
         url: normalized,
         publishedAt: item.pubDate,
         summary: summarize(item),

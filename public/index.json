@@ -1,6 +1,13 @@
 {
-  "generatedAt": "2026-04-11T20:28:50.279Z",
+  "generatedAt": "2026-04-12T20:31:25.700Z",
   "items": [
+    {
+      "date": "2026-04-13",
+      "themeId": "gen-ai",
+      "themeName": "生成AI",
+      "title": "2026-04-13 生成AI 朝刊",
+      "path": "content/2026-04-13/gen-ai.md"
+    },
     {
       "date": "2026-04-12",
       "themeId": "gen-ai",

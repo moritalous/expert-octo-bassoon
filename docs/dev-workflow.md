@@ -35,6 +35,11 @@
 - `bash scripts/check-safe-commit.sh` は staged 変更を対象に実行する。
 - `mise run prepr` は追跡ファイル全体の安全性チェックと関連テストをまとめて実行する。
 
+## Issue と PR の扱い
+- Issue 対応は GitHub フローに従い、原則として `Issue確認 -> 作業ブランチ作成 -> 実装 -> テスト -> PR作成 -> レビュー -> マージ` の順で進める。
+- Issue のクローズはユーザーが行う。エージェントが代行してクローズしてよいのは、ユーザーから明確な依頼がある場合だけにする。
+- PR 作成後も、Issue は手動でクローズしない。
+
 ## worktree 運用
 - worktree で作業を始めたら、まず `codex/` 接頭辞の作業ブランチを作る。
 - 別 worktree で `main` を使用中の場合、この worktree で `main` への checkout が失敗することがある。
